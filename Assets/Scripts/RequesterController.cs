@@ -66,8 +66,12 @@ public class RequesterController : MonoBehaviour
             if (fill <= 0.5f && angryStatus == 1)
             {
                 angryStatus++;
-                UpdateBody(angryStatus);
-                UpdateFace(angryStatus);
+                UpdateAnger(angryStatus);
+            }
+            if (fill <= 0.25f && angryStatus == 2)
+            {
+                angryStatus++;
+                UpdateAnger(angryStatus);
             }
             if (activeTimer <= 0)
             {
@@ -80,8 +84,7 @@ public class RequesterController : MonoBehaviour
     private void SelectRequestedObject()
     {
         angryStatus = 1;
-        UpdateFace(angryStatus);
-        UpdateBody(angryStatus);
+        UpdateAnger(angryStatus);
 
         activeTimer = roundTimer;
         timerImage.fillAmount = 1;
@@ -104,8 +107,7 @@ public class RequesterController : MonoBehaviour
         runTimer = false;
         //happy animation and score increase        
         angryStatus--;
-        UpdateFace(angryStatus);
-        UpdateBody(angryStatus);
+        UpdateAnger(angryStatus);
         requestedObjectText.text = "Correct";
         Invoke("SelectRequestedObject", 1f);
     }
@@ -115,14 +117,13 @@ public class RequesterController : MonoBehaviour
         //angry animation and score decrease?
         RemoveObjectFromList(obi);
         angryStatus++;
-        if (angryStatus > 2)
+        if (angryStatus > 3)
         {
             GameOver();
         }   
         else
         {
-            UpdateFace(angryStatus);
-            UpdateBody(angryStatus);
+            UpdateAnger(angryStatus);
         }        
     }   
 
@@ -131,26 +132,37 @@ public class RequesterController : MonoBehaviour
         pickUpObjects.Remove(obi.Object);
     }
 
-    private void UpdateFace(int i)
+    private void UpdateAnger(int i)
     {
-        foreach (GameObject go in faceses)
+        foreach (GameObject f in faceses)
         {
-            go.SetActive(false);
+            f.SetActive(false);
         }
-        faceses[i].SetActive(true);
-    }
 
-    private void UpdateBody(int i)
-    {
-        if (i >= 2)
+        foreach (GameObject b in bodies)
         {
-            bodies[0].SetActive(false);
-            bodies[1].SetActive(true);
+            b.SetActive(false);
         }
-        else
+
+        if (i == 0)
         {
+            faceses[0].SetActive(true);
             bodies[0].SetActive(true);
-            bodies[1].SetActive(false);
+        }
+        else if (i == 1)
+        {
+            faceses[1].SetActive(true);
+            bodies[0].SetActive(true);
+        }
+        else if (i == 2)
+        {
+            faceses[2].SetActive(true);
+            bodies[0].SetActive(true);
+        }
+        else if (i == 3)
+        {
+            faceses[2].SetActive(true);
+            bodies[1].SetActive(true);
         }
     }
 
